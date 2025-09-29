@@ -1,0 +1,40 @@
+body {
+	background-color: #f8f9fa;
+}
+.stats-card {
+	background-color: #ffffff;
+	border-radius: 12px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+	padding: 20px;
+	margin-bottom: 20px;
+	text-align: center;
+}
+.section-card {
+	background-color: #ffffff;
+	border-radius: 12px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+	padding: 30px;
+	text-align: center;
+	transition: transform 0.2s;
+}
+.section-card:hover {
+	transform: translateY(-5px);
+}
+.section-card h2 {
+	margin-bottom: 15px;
+}
+.recent-activity {
+	margin-top: 30px;
+}
+.recent-card {
+	background-color: #ffffff;
+	border-radius: 10px;
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
+	padding: 10px;
+	text-align: center;
+}
+.recent-card img {
+	width: 100%;
+	border-radius: 8px;
+}
+

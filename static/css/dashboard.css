@@ -1,0 +1,43 @@
+body {
+	background-color: #f8f9fa;
+}
+.filter-bar {
+	margin-bottom: 20px;
+}
+.item-card {
+	background-color: #fff;
+	border-radius: 12px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+	padding: 10px;
+	text-align: center;
+	transition: transform 0.2s;
+}
+.item-card:hover {
+	transform: translateY(-5px);
+}
+.item-card img {
+	width: 200px;
+	height: 300px;
+	object-fit: cover;
+	border-radius: 8px;
+	margin-bottom: 10px;
+}
+.status-badge {
+	font-size: 0.8rem;
+	padding: 5px 10px;
+	border-radius: 12px;
+	color: #fff;
+}
+.status-watched {
+	background-color: #28a745;
+}
+.status-towatch {
+	background-color: #ffc107;
+}
+.rating {
+	margin-top: 5px;
+}
+.breadcrumb {
+	background-color: transparent;
+	padding-left: 0;
+}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Search{% endblock %}
+
+{% block style %}
+    {{ super() }}
+    <link href="{{ url_for('static', filename='css/search.css') }}" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+    <!-- Search Bar -->
+    <div class="row search-bar">
+        <div class="col-md-8 mb-2">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search for a movie or web series...">
+        </div>
+        <div class="col-md-2 mb-2">
+            <select id="typeSelect" class="form-select">
+                <option value="all">All</option>
+                <option value="movie">Movie</option>
+                <option value="tv">Web Series</option>
+            </select>
+        </div>
+        <div class="col-md-2 mb-2">
+            <button id="searchBtn" class="btn btn-primary w-100">Search</button>
+        </div>
+    </div>
+
+    <!-- Results Grid -->
+    <div class="row g-4" id="resultsGrid">
+
+        <!-- Example Card -->
+        <div class="col-md-3 col-sm-6">
+            <div class="item-card">
+                <img src="https://picsum.photos/200/300?random=1" alt="Item 1">
+                <h5>Title 1</h5>
+                <span class="status-badge status-movie">Movie</span>
+                <p>Release: 2024 | ⭐ 8.2</p>
+                <a href="#" class="btn btn-sm btn-outline-primary">Add to Watchlist</a>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="item-card">
+                <img src="https://picsum.photos/200/300?random=2" alt="Item 2">
+                <h5>Title 2</h5>
+                <span class="status-badge status-series">Web Series</span>
+                <p>First Air: 2023 | ⭐ 7.5</p>
+                <a href="#" class="btn btn-sm btn-outline-primary">Add to Watchlist</a>
+            </div>
+        </div>
+
+        <!-- More cards will be dynamically added via Flask -->
+
+    </div>
+
+    <!-- Pagination / Load More -->
+    <div class="text-center mt-4">
+        <button class="btn btn-outline-primary">Load More</button>
+    </div>
+
+{% endblock %}

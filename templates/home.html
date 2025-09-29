@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block style %}
+    {{ super() }}
+    <link href="{{ url_for('static', filename='css/home.css') }}" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+    <!-- Stats Section -->
+    <div class="row mb-4">
+        <div class="col-md-3 col-sm-6">
+            <div class="stats-card">
+                <h5>🎬 Movies Watched</h5>
+                <h3>40</h3>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="stats-card">
+                <h5>🎬 Movies To Watch</h5>
+                <h3>12</h3>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="stats-card">
+                <h5>📺 Series Watched</h5>
+                <h3>15</h3>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="stats-card">
+                <h5>📺 Series To Watch</h5>
+                <h3>8</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Access Cards -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="section-card">
+                <h2>🎬 Movies Dashboard</h2>
+                <p>View & manage all your movies</p>
+                <a href="{{ url_for('movie_dashboard') }}" class="btn btn-outline-primary">Go to Movies</a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="section-card">
+                <h2>📺 Web Series Dashboard</h2>
+                <p>View & manage all your web series</p>
+                <a href="{{ url_for('series_dashboard') }}" class="btn btn-outline-primary">Go to Series</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Movies Carousel -->
+    <div class="recent-activity mt-5">
+        <h4 class="mb-3">Recently Added Movies</h4>
+        <div id="moviesCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+
+                <div class="carousel-item active">
+                    <div class="d-flex gap-3 justify-content-center">
+                        <div class="recent-card">
+                            <img src="https://picsum.photos/200/300?random=1" alt="Movie 1">
+                            <p>Movie 1</p>
+                        </div>
+                        <div class="recent-card">
+                            <img src="https://picsum.photos/200/300?random=2" alt="Movie 2">
+                            <p>Movie 2</p>
+                        </div>
+                        <div class="recent-card">
+                            <img src="https://picsum.photos/200/300?random=3" alt="Movie 3">
+                            <p>Movie 3</p>
+                        </div>
+                        <div class="recent-card">
+                            <img src="https://picsum.photos/200/300?random=4" alt="Movie 4">
+                            <p>Movie 4</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="carousel-item">
+                    <div class="d-flex gap-3 justify-content-center">
+                        <div class="recent-card">
+                            <img src="https://picsum.photos/200/300?random=5" alt="Movie 5">
+                            <p>Movie 5</p>
+                        </div>
+                        <div class="recent-card">
+                            <img src="https://picsum.photos/200/300?random=6" alt="Movie 6">
+                            <p>Movie 6</p>
+                        </div>
+                        <div class="recent-card">
+                            <img src="https://picsum.photos/200/300?random=7" alt="Movie 7">
+                            <p>Movie 7</p>
+                        </div>
+                        <div class="recent-card">
+                            <img src="https://picsum.photos/200/300?random=8" alt="Movie 8">
+                            <p>Movie 8</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#moviesCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#moviesCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Recent Web Series Carousel -->
+    <div class="recent-activity mt-5">
+        <h4 class="mb-3">Recently Added Web Series</h4>
+        <div id="seriesCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+
+                <div class="carousel-item active">
+                    <div class="d-flex gap-3 justify-content-center">
+                        <div class="recent-card">
+                            <img src="https://picsum.photos/200/300?random=11" alt="Series 1">
+                            <p>Series 1</p>
+                        </div>
+                        <div class="recent-card">
+                            <img src="https://picsum.photos/200/300?random=12" alt="Series 2">
+                            <p>Series 2</p>
+                        </div>
+                        <div class="recent-card">
+                            <img src="https://picsum.photos/200/300?random=13" alt="Series 3">
+                            <p>Series 3</p>
+                        </div>
+                        <div class="recent-card">
+                            <img src="https://picsum.photos/200/300?random=14" alt="Series 4">
+                            <p>Series 4</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="carousel-item">
+                    <div class="d-flex gap-3 justify-content-center">
+                        <div class="recent-card">
+                            <img src="https://picsum.photos/200/300?random=15" alt="Series 5">
+                            <p>Series 5</p>
+                        </div>
+                        <div class="recent-card">
+                            <img src="https://picsum.photos/200/300?random=16" alt="Series 6">
+                            <p>Series 6</p>
+                        </div>
+                        <div class="recent-card">
+                            <img src="https://picsum.photos/200/300?random=17" alt="Series 7">
+                            <p>Series 7</p>
+                        </div>
+                        <div class="recent-card">
+                            <img src="https://picsum.photos/200/300?random=18" alt="Series 8">
+                            <p>Series 8</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#seriesCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#seriesCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+        </div>
+    </div>
+
+{% endblock %}
+
