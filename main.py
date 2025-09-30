@@ -204,7 +204,7 @@ def add_to_wishlist():
         tmdb_id=tmdb_id,
         media_type=media_type,
         title=title,
-        release_date=release_date,
+        release_date=datetime.strptime(release_date, "%Y-%m-%d").strftime("%d-%m-%Y"),
         poster_path=f"{TMDB_IMG_BASE_URL}{poster_path}",
         overview=overview,
         rating=rating,
@@ -264,6 +264,45 @@ def dashboard(media_type):
         sort_by=sort_by
     )
 
+
+@app.route("/edit/<int:item_id>", methods=["GET", "POST"])
+def edit_item(item_id):
+    # Fetch the item from DB
+    item = db.session.execute(db.select(Wishlist).where(Wishlist.id == item_id)).scalar()
+
+    if not item:
+        flash("Item not found.", "danger")
+        return redirect(url_for("dashboard", media_type="movie"))  # fallback
+
+    if request.method == "POST":
+        # Get form data from modal
+        status = request.form.get("status")
+        user_rating = request.form.get("user_rating")
+        notes = request.form.get("notes")
+
+        # Update fields
+        item.status = status
+        item.user_rating = float(user_rating) if user_rating else None
+        item.notes = notes or None
+
+        # Commit changes
+        db.session.commit()
+        flash(f"{item.title} has been updated successfully!", "success")
+
+        # Redirect back to edit page or dashboard
+        return redirect(url_for("edit_item", item_id=item.id))
+
+    # GET request: show edit page
+    return render_template("edit.html", item=item)
+
+
+@app.route("/wishlist/delete/<int:item_id>")
+def delete_item(item_id):
+    item = db.session.execute(db.select(Wishlist).where(Wishlist.id == item_id)).scalar()
+    db.session.delete(item)
+    db.session.commit()
+    flash(f'"{item.title}" has been deleted.', 'success')
+    return redirect(request.referrer or url_for('dashboard', media_type=item.media_type))
 
 
 if __name__ == '__main__':

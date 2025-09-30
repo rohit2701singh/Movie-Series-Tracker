@@ -1,0 +1,45 @@
+/* Ensure the image fits nicely */
+.col-md-4 img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Add some spacing for the form */
+.col-md-8 {
+    padding-left: 30px;
+}
+
+/* Form heading */
+.col-md-8 h2 {
+    margin-bottom: 20px;
+}
+
+/* Input and textarea styling */
+.form-control, .form-select {
+    border-radius: 6px;
+}
+
+/* Buttons */
+.btn-primary {
+    min-width: 120px;
+}
+
+.btn-secondary {
+    min-width: 120px;
+}
+
+/* Add spacing between form groups */
+.mb-3 {
+    margin-bottom: 1.2rem;
+}
+
+/* Responsive tweaks for smaller screens */
+@media (max-width: 768px) {
+    .col-md-4, .col-md-8 {
+        padding-left: 0;
+        padding-right: 0;
+        margin-bottom: 20px;
+    }
+}
