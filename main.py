@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, flash
+from flask import Flask, render_template, redirect, request, flash, url_for
 from forms import SearchForm
 import requests
 from flask_sqlalchemy import SQLAlchemy
@@ -57,17 +57,6 @@ with app.app_context():
 @app.route("/")
 def home():
     return render_template("home.html") 
-
-
-@app.route("/movie-dashboard")
-def movie_dashboard():
-    return render_template("movie_dashboard.html") 
-
-
-@app.route("/series-dashboard")
-def series_dashboard():
-    return render_template("series_dashboard.html") 
-
 
 
 @app.route("/search", methods=["GET", "POST"])
@@ -167,7 +156,7 @@ def add_to_wishlist():
         media_type=media_type,
         title=title,
         release_date=release_date,
-        poster_path=poster_path,
+        poster_path=f"{TMDB_IMG_BASE_URL}{poster_path}",
         overview=overview,
         rating=rating,
         vote_count=vote_count,
@@ -183,6 +172,37 @@ def add_to_wishlist():
     flash(f'"{title}" {media_type} added to your Watchlist!', "success")
 
     return redirect(request.referrer)  # Go back to search page
+
+
+@app.route("/dashboard/<media_type>")
+def dashboard(media_type):
+    if media_type not in ["movie", "series"]:
+        return redirect(url_for("home"))
+
+    q = request.args.get("q", "")
+    status_filter = request.args.get("status", "")
+    sort_by = request.args.get("sort", "")
+
+    items = db.select(Wishlist).where(Wishlist.media_type == media_type)
+    # print(items)
+
+    if q:
+        items = items.where(Wishlist.title.ilike(f"%{q}%"))
+
+    if status_filter in ["watched", "towatch"]:
+        items = items.where(Wishlist.status == status_filter)
+
+    if sort_by == "rating":
+        items = items.order_by(Wishlist.rating.desc())
+    elif sort_by == "date_added":
+        items = items.order_by(Wishlist.date_added.desc())
+    elif sort_by == "title":
+        items = items.order_by(Wishlist.title.asc())
+
+    items = db.session.execute(items).scalars().all()
+
+    return render_template("dashboard.html", items=items, media_type=media_type)
+
 
 
 

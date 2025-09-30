@@ -41,14 +41,14 @@
             <div class="section-card">
                 <h2>🎬 Movies Dashboard</h2>
                 <p>View & manage all your movies</p>
-                <a href="{{ url_for('movie_dashboard') }}" class="btn btn-outline-primary">Go to Movies</a>
+                <a href="{{ url_for('dashboard', media_type='movie') }}" class="btn btn-outline-primary">Go to Movies</a>
             </div>
         </div>
         <div class="col-md-6">
             <div class="section-card">
                 <h2>📺 Web Series Dashboard</h2>
                 <p>View & manage all your web series</p>
-                <a href="{{ url_for('series_dashboard') }}" class="btn btn-outline-primary">Go to Series</a>
+                <a href="{{ url_for('dashboard', media_type='series') }}" class="btn btn-outline-primary">Go to Series</a>
             </div>
         </div>
     </div>

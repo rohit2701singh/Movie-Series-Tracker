@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Movies Dashboard{% endblock %}
+
+{% block style %}
+    {{ super() }}
+    <link href="{{ url_for('static', filename='css/dashboard.css') }}" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+
+    <!-- Add New Button centered -->
+    <div class="text-center mb-4">
+        <a href="{{ url_for('search', status=media_type) }}" class="btn btn-primary btn-lg">
+            + Add New {{ media_type|capitalize }}
+        </a>
+    </div>
+
+    <!-- Filter & Search Bar -->
+    <div class="row filter-bar align-items-center">
+        <form method="GET" action="{{ url_for('dashboard', media_type=media_type) }}" class="col-12 row g-2">
+            <!-- Search input -->
+            <div class="col-md-6 mb-2">
+                <input type="text" name="q" class="form-control" placeholder="Search by title..." value="{{ request.args.get('q', '') }}">
+            </div>
+
+            <!-- Status select -->
+            <div class="col-md-2 mb-2">
+                <select name="status" class="form-select">
+                    <option value="">All Status</option>
+                    <option value="watched" {% if request.args.get('status')=="watched" %}selected{% endif %}>Watched</option>
+                    <option value="towatch" {% if request.args.get('status')=="towatch" %}selected{% endif %}>Want to Watch</option>
+                </select>
+            </div>
+
+            <!-- Sort select -->
+            <div class="col-md-2 mb-2">
+                <select name="sort" class="form-select">
+                    <option value="">Sort By</option>
+                    <option value="rating" {% if request.args.get('sort')=="rating" %}selected{% endif %}>Rating</option>
+                    <option value="date_added" {% if request.args.get('sort')=="date_added" %}selected{% endif %}>Date Added</option>
+                    <option value="title" {% if request.args.get('sort')=="title" %}selected{% endif %}>Title</option>
+                </select>
+            </div>
+
+            <!-- Apply button -->
+            <div class="col-md-2 mb-2 text-end">
+                <button type="submit" class="btn btn-primary w-100">Apply</button>
+            </div>
+        </form>
+    </div>
+
+
+    <!-- Cards Grid -->
+    <div class="row g-4">
+        {% for item in items %}
+            <div class="col-md-3 col-sm-6">
+                <div class="item-card">
+                    <img src="{{ item.poster_path }}" alt="{{ item.title }}">
+                    <h5>{{ item.title }}</h5>
+                    <span class="status-badge status-{{ item.status }}">{{ "Watched" if item.status=="watched" else "Want to Watch" }}</span>
+                    <div class="rating">⭐ {{ item.rating }}</div>
+                    <div class="mt-2">
+                        <a href="#" class="btn btn-sm btn-outline-primary">Edit</a>
+                        <a href="#" class="btn btn-sm btn-outline-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+    </nav>
+
+{% endblock %}
