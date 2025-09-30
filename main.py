@@ -56,7 +56,56 @@ with app.app_context():
 
 @app.route("/")
 def home():
-    return render_template("home.html") 
+
+    # movies_watched = db.session.execute(
+    #     db.select(Wishlist).where(Wishlist.media_type=="movie").where(Wishlist.status=="watched")
+    # ).scalars().all()
+    # print(len(movies_watched))
+
+    # for counter at home screen
+    movies_watched = db.session.execute(
+        db.select(Wishlist).where(Wishlist.media_type=="movie", Wishlist.status=="watched")
+    ).scalars().all()
+
+    movies_towatch = db.session.execute(
+        db.select(Wishlist).where(Wishlist.media_type=="movie", Wishlist.status=="towatch")
+    ).scalars().all()
+
+    series_watched = db.session.execute(
+        db.select(Wishlist).where(Wishlist.media_type=="series", Wishlist.status=="watched")
+    ).scalars().all()
+
+    series_towatch = db.session.execute(
+        db.select(Wishlist).where(Wishlist.media_type=="series", Wishlist.status=="towatch")
+    ).scalars().all()
+
+
+    # for recent activity
+    recent_movies = db.session.execute(
+        db.select(Wishlist)
+        .where(Wishlist.media_type == "movie")
+        .order_by(Wishlist.id.desc())
+        .limit(4)
+    ).scalars().all()
+
+    recent_series = db.session.execute(
+        db.select(Wishlist)
+        .where(Wishlist.media_type == "series")
+        .order_by(Wishlist.id.desc())
+        .limit(4)
+    ).scalars().all()
+
+    
+    return render_template(
+        "home.html",
+        movies_watched = len(movies_watched),
+        movies_towatch = len(movies_towatch),
+        series_watched = len(series_watched),
+        series_towatch = len(series_towatch),
+        recent_movies = recent_movies,
+        recent_series = recent_series
+    )
+
 
 
 @app.route("/search", methods=["GET", "POST"])
@@ -172,6 +221,7 @@ def add_to_wishlist():
     flash(f'"{title}" {media_type} added to your Watchlist!', "success")
 
     return redirect(request.referrer)  # Go back to search page
+
 
 
 @app.route("/dashboard/<media_type>")
