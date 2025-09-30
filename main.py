@@ -226,6 +226,9 @@ def add_to_wishlist():
 
 @app.route("/dashboard/<media_type>")
 def dashboard(media_type):
+    page = request.args.get("page", 1, type=int)  # current page
+    per_page = 3  # items per page
+
     if media_type not in ["movie", "series"]:
         return redirect(url_for("home"))
 
@@ -233,26 +236,33 @@ def dashboard(media_type):
     status_filter = request.args.get("status", "")
     sort_by = request.args.get("sort", "")
 
-    items = db.select(Wishlist).where(Wishlist.media_type == media_type)
-    # print(items)
+    # Start building query
+    query = db.select(Wishlist).where(Wishlist.media_type == media_type)
 
     if q:
-        items = items.where(Wishlist.title.ilike(f"%{q}%"))
+        query = query.where(Wishlist.title.ilike(f"%{q}%"))
 
     if status_filter in ["watched", "towatch"]:
-        items = items.where(Wishlist.status == status_filter)
+        query = query.where(Wishlist.status == status_filter)
 
     if sort_by == "rating":
-        items = items.order_by(Wishlist.rating.desc())
+        query = query.order_by(Wishlist.rating.desc())
     elif sort_by == "date_added":
-        items = items.order_by(Wishlist.date_added.desc())
+        query = query.order_by(Wishlist.date_added.desc())
     elif sort_by == "title":
-        items = items.order_by(Wishlist.title.asc())
+        query = query.order_by(Wishlist.title.asc())
 
-    items = db.session.execute(items).scalars().all()
+    # Use paginate
+    items = db.paginate(query, page=page, per_page=per_page, error_out=False)
 
-    return render_template("dashboard.html", items=items, media_type=media_type)
-
+    return render_template(
+        "dashboard.html",
+        items=items,
+        media_type=media_type,
+        q=q,
+        status_filter=status_filter,
+        sort_by=sort_by
+    )
 
 
 
