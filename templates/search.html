@@ -59,7 +59,24 @@
                         Release: {{ item.formatted_date }} |
                         ⭐ {{ item.vote_average or "N/A" }} ({{ item.vote_count or 0 }})
                     </p>
-                    <a href="#" class="btn btn-sm btn-outline-primary">Add to Watchlist</a>
+                    <!-- <a href="#" class="btn btn-sm btn-outline-primary">Add to Watchlist</a> -->
+                    
+                    <form method="POST" action="{{ url_for('add_to_wishlist') }}">
+
+                        <input type="hidden" name="tmdb_id" value="{{ item.id }}">
+                        <input type="hidden" name="media_type" value="{{ item.media_type }}">
+                        <input type="hidden" name="title" value="{{ item.title or item.name }}">
+                        <input type="hidden" name="release_date" value="{{ item.release_date or item.first_air_date }}">
+                        <input type="hidden" name="poster_path" value="{{ item.poster_path }}">
+                        <input type="hidden" name="overview" value="{{ item.overview }}">
+                        <input type="hidden" name="rating" value="{{ item.vote_average }}">
+                        <input type="hidden" name="vote_count" value="{{ item.vote_count }}">
+                        <input type="hidden" name="original_language" value="{{ item.original_language }}">
+                        <input type="hidden" name="popularity" value="{{ item.popularity }}">
+
+                        <button type="submit" class="btn btn-sm btn-outline-primary">Add to Watchlist</button>
+                    </form>
+
                 </div>
             </div>
         {% endfor %}

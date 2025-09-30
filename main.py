@@ -1,7 +1,8 @@
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, flash
 from forms import SearchForm
 import requests
-from datetime import datetime
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime, timezone
 import os
 from dotenv import load_dotenv
 
@@ -19,6 +20,38 @@ headers = {
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = os.getenv('FLASK_KEY')
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///wishlist.db"
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy()
+db.init_app(app)
+
+
+class Wishlist(db.Model):
+    __tablename__ = "wishlist"
+
+    id = db.Column(db.Integer, primary_key=True)
+    tmdb_id = db.Column(db.Integer, nullable=False)
+    media_type = db.Column(db.String(10), nullable=False)  # movie or series
+    title = db.Column(db.String(255), nullable=False)
+    release_date = db.Column(db.String(20))  # store as string "dd-mm-yyyy" or original from TMDB
+    poster_path = db.Column(db.String(255))
+    overview = db.Column(db.Text)
+    rating = db.Column(db.Float)  # vote_average
+    vote_count = db.Column(db.Integer)
+    original_language = db.Column(db.String(10))
+    popularity = db.Column(db.Float)
+    status = db.Column(db.String(20), nullable=False, default="towatch")  # "watched" or "towatch"
+    date_added = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    user_rating = db.Column(db.Float, nullable=True)  # optional
+    notes = db.Column(db.Text, nullable=True)  # optional
+
+    def __repr__(self):
+        return f"<Wishlist {self.title} ({self.media_type})>"
+
+
+with app.app_context():
+    db.create_all()
 
 
 @app.route("/")
@@ -102,6 +135,54 @@ def search():
         status=status,
     )
 
+
+
+@app.route("/wishlist/add", methods=["POST"])
+def add_to_wishlist():
+
+    # Get data from form
+    tmdb_id = request.form.get("tmdb_id")
+    media_type = request.form.get("media_type")
+    title = request.form.get("title")
+    release_date = request.form.get("release_date")
+    poster_path = request.form.get("poster_path")
+    overview = request.form.get("overview")
+    rating = request.form.get("rating")
+    vote_count = request.form.get("vote_count")
+    original_language = request.form.get("original_language")
+    popularity = request.form.get("popularity")
+    user_rating = request.form.get("user_rating")  # optional, can be empty
+    notes = request.form.get("notes")  # optional, can be empty
+
+    # Check if already in wishlist
+    existing_item = db.session.execute(db.select(Wishlist).where((Wishlist.tmdb_id == tmdb_id) & (Wishlist.media_type == media_type))).scalar()
+
+    if existing_item:
+        flash(f'"{title}" {media_type} is already in your Watchlist!', "warning")
+        return redirect(request.referrer)   # user goes back to the search results, not to a blank or unrelated page
+
+    # Create new Wishlist item
+    new_item = Wishlist(
+        tmdb_id=tmdb_id,
+        media_type=media_type,
+        title=title,
+        release_date=release_date,
+        poster_path=poster_path,
+        overview=overview,
+        rating=rating,
+        vote_count=vote_count,
+        original_language=original_language,
+        popularity=popularity,
+        status="towatch",      # default status
+        user_rating=user_rating or None,  # optional
+        notes=notes or None              # optional
+    )
+
+    db.session.add(new_item)
+    db.session.commit()
+    flash(f'"{title}" {media_type} added to your Watchlist!', "success")
+
+    return redirect(request.referrer)  # Go back to search page
 
 
 
