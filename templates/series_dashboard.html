@@ -29,7 +29,7 @@
             </select>
         </div>
         <div class="col-md-2 mb-2 text-end">
-            <a href="#" class="btn btn-primary">+ Add New Series</a>
+            <a href="{{ url_for('search', status='series') }}" class="btn btn-primary">+ Add New Series</a>
         </div>
     </div>
 
@@ -62,45 +62,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="col-md-3 col-sm-6">
-            <div class="item-card">
-                <img src="https://picsum.photos/200/300?random=1" alt="Series 1">
-                <h5>Series Title 3</h5>
-                <span class="status-badge status-watched">Watched</span>
-                <div class="rating">⭐ 8.5</div>
-                <div class="mt-2">
-                    <a href="#" class="btn btn-sm btn-outline-primary">Edit</a>
-                    <a href="#" class="btn btn-sm btn-outline-danger">Delete</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 col-sm-6">
-            <div class="item-card">
-                <img src="https://picsum.photos/200/300?random=2" alt="Series 2">
-                <h5>Series Title 4</h5>
-                <span class="status-badge status-towatch">Want to Watch</span>
-                <div class="rating">—</div>
-                <div class="mt-2">
-                    <a href="#" class="btn btn-sm btn-outline-primary">Edit</a>
-                    <a href="#" class="btn btn-sm btn-outline-danger">Delete</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="item-card">
-                <img src="https://picsum.photos/200/300?random=1" alt="Series 1">
-                <h5>Series Title 5</h5>
-                <span class="status-badge status-watched">Watched</span>
-                <div class="rating">⭐ 8.5</div>
-                <div class="mt-2">
-                    <a href="#" class="btn btn-sm btn-outline-primary">Edit</a>
-                    <a href="#" class="btn btn-sm btn-outline-danger">Delete</a>
-                </div>
-            </div>
-        </div>
-
 
         <!-- Add more cards dynamically via Flask -->
 

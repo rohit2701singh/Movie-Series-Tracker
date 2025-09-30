@@ -34,8 +34,9 @@
                             + Add New
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{url_for('search')}}">Add Movie</a></li>
-                            <li><a class="dropdown-item" href="{{url_for('search')}}">Add Web Series</a></li>
+                            <li><a class="dropdown-item" href="{{url_for('search', status='movie')}}">+ Add Movie</a></li>
+                            <li><a class="dropdown-item" href="{{url_for('search', status='series')}}">+ Add Web Series</a></li>
+                            <li><a class="dropdown-item" href="{{url_for('search', status='all')}}">+ Movie & Series</a></li>
                         </ul>
                     </li>
                 </ul>
