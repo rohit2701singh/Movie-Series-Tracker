@@ -227,7 +227,7 @@ def add_to_wishlist():
 @app.route("/dashboard/<media_type>")
 def dashboard(media_type):
     page = request.args.get("page", 1, type=int)  # current page
-    per_page = 3  # items per page
+    per_page = 4  # items per page
 
     if media_type not in ["movie", "series"]:
         return redirect(url_for("home"))
@@ -247,10 +247,11 @@ def dashboard(media_type):
 
     if sort_by == "rating":
         query = query.order_by(Wishlist.rating.desc())
-    elif sort_by == "date_added":
-        query = query.order_by(Wishlist.date_added.desc())
     elif sort_by == "title":
         query = query.order_by(Wishlist.title.asc())
+    else:
+        # default or "date_added"
+        query = query.order_by(Wishlist.date_added.desc())
 
     # Use paginate
     items = db.paginate(query, page=page, per_page=per_page, error_out=False)
@@ -302,7 +303,7 @@ def delete_item(item_id):
     db.session.delete(item)
     db.session.commit()
     flash(f'"{item.title}" has been deleted.', 'success')
-    return redirect(request.referrer or url_for('dashboard', media_type=item.media_type))
+    return redirect(url_for('dashboard', media_type=item.media_type))
 
 
 if __name__ == '__main__':

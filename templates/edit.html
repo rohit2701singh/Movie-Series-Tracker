@@ -26,7 +26,12 @@
             <p><strong>Vote Count:</strong> {{ item.vote_count or 'N/A' }}</p>
             <p><strong>Original Language:</strong> {{ item.original_language or 'N/A' }}</p>
             <p><strong>Popularity:</strong> {{ item.popularity or 'N/A' }}</p>
-            <p><strong>Status:</strong> {{ "Watched" if item.status=="watched" else "Want to Watch" }}</p>
+            <p>
+                <strong>Status:</strong>
+                <span class="status-badge status-{{ item.status }}">
+                    {{ "Watched" if item.status=="watched" else "Want to Watch" }}
+                </span>
+            </p>
             <p><strong>Your Rating:</strong> {{ item.user_rating or 'N/A' }}</p>
             <p><strong>Notes:</strong> {{ item.notes or 'N/A' }}</p>
 
@@ -39,7 +44,7 @@
                 Delete
             </button>
             <!-- Cancel Button -->
-            <a href="{{ request.referrer or url_for('dashboard', media_type=item.media_type) }}" class="btn btn-secondary mt-3">
+            <a href="{{ url_for('dashboard', media_type=item.media_type) }}" class="btn btn-secondary mt-3">
                 Cancel
             </a>
 

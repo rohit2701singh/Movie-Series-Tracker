@@ -35,6 +35,20 @@
     margin-bottom: 1.2rem;
 }
 
+/* status badge */
+.status-badge {
+	font-size: 0.8rem;
+	padding: 5px 10px;
+	border-radius: 12px;
+	color: #fff;
+}
+.status-watched {
+	background-color: #28a745;
+}
+.status-towatch {
+	background-color: #ffc107;
+}
+
 /* Responsive tweaks for smaller screens */
 @media (max-width: 768px) {
     .col-md-4, .col-md-8 {
@@ -43,3 +57,4 @@
         margin-bottom: 20px;
     }
 }
+

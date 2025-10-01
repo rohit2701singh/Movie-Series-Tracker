@@ -10,30 +10,42 @@
     <!-- Stats Section -->
     <div class="row mb-4">
         <div class="col-md-3 col-sm-6">
-            <div class="stats-card">
-                <h5>🎬 Movies Watched</h5>
-                <h3>{{ movies_watched }}</h3>
-            </div>
+            <a href="{{ url_for('dashboard', media_type='movie', status='watched') }}" class="text-decoration-none card-link">
+                <div class="stats-card">
+                    <h5>🎬 Movies Watched</h5>
+                    <h3>{{ movies_watched }}</h3>
+                </div>
+            </a>
         </div>
+
         <div class="col-md-3 col-sm-6">
-            <div class="stats-card">
-                <h5>🎬 Movies To Watch</h5>
-                <h3>{{ movies_towatch }}</h3>
-            </div>
+            <a href="{{ url_for('dashboard', media_type='movie', status='towatch') }}" class="text-decoration-none card-link">
+                <div class="stats-card">
+                    <h5>🎬 Movies To Watch</h5>
+                    <h3>{{ movies_towatch }}</h3>
+                </div>
+            </a>
         </div>
+
         <div class="col-md-3 col-sm-6">
-            <div class="stats-card">
-                <h5>📺 Series Watched</h5>
-                <h3>{{ series_watched }}</h3>
-            </div>
+            <a href="{{ url_for('dashboard', media_type='series', status='watched') }}" class="text-decoration-none card-link">
+                <div class="stats-card">
+                    <h5>📺 Series Watched</h5>
+                    <h3>{{ series_watched }}</h3>
+                </div>
+            </a>
         </div>
+
         <div class="col-md-3 col-sm-6">
-            <div class="stats-card">
-                <h5>📺 Series To Watch</h5>
-                <h3>{{ series_towatch }}</h3>
-            </div>
+            <a href="{{ url_for('dashboard', media_type='series', status='towatch') }}" class="text-decoration-none card-link">
+                <div class="stats-card">
+                    <h5>📺 Series To Watch</h5>
+                    <h3>{{ series_towatch }}</h3>
+                </div>
+            </a>
         </div>
     </div>
+
 
     <!-- Quick Access Cards -->
     <div class="row mb-4">
@@ -63,10 +75,12 @@
         <div class="row">
             {% for movie in recent_movies %}
                 <div class="col-6 col-md-3 mb-3">
-                    <div class="recent-card text-center">
-                        <img src="{{ movie.poster_path or 'https://picsum.photos/200/300' }}" alt="{{ movie.title }}" class="img-fluid rounded">
-                        <p class="mt-2">{{ movie.title }}</p>
-                    </div>
+                    <a href="{{ url_for('edit_item', item_id=movie.id) }}" class="text-decoration-none card-link">
+                        <div class="recent-card text-center">
+                            <img src="{{ movie.poster_path or 'https://picsum.photos/200/300' }}" alt="{{ movie.title }}" class="img-fluid rounded">
+                            <p class="mt-2">{{ movie.title }}</p>
+                        </div>
+                    </a>
                 </div>
             {% endfor %}
         </div>
@@ -81,10 +95,12 @@
         <div class="row">
             {% for show in recent_series %}
                 <div class="col-6 col-md-3 mb-3">
-                    <div class="recent-card text-center">
-                        <img src="{{ show.poster_path or 'https://picsum.photos/200/300' }}" alt="{{ show.title }}" class="img-fluid rounded">
-                        <p class="mt-2">{{ show.title }}</p>
-                    </div>
+                    <a href="{{ url_for('edit_item', item_id=show.id) }}" class="text-decoration-none card-link">
+                        <div class="recent-card text-center">
+                            <img src="{{ show.poster_path or 'https://picsum.photos/200/300' }}" alt="{{ show.title }}" class="img-fluid rounded">
+                            <p class="mt-2">{{ show.title }}</p>
+                        </div>
+                    </a>
                 </div>
             {% endfor %}
         </div>

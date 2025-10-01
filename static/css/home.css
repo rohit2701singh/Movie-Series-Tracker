@@ -2,13 +2,27 @@ body {
 	background-color: #f8f9fa;
 }
 .stats-card {
-	background-color: #ffffff;
-	border-radius: 12px;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-	padding: 20px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
 	margin-bottom: 20px;
 	text-align: center;
+    cursor: pointer;
 }
+.stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.card-link {
+    text-decoration: none;
+    color: inherit; /* keep the card’s text color */
+}
+.card-link:hover {
+    color: inherit; /* no hover color change */
+}
+
 .section-card {
 	background-color: #ffffff;
 	border-radius: 12px;
@@ -32,6 +46,7 @@ body {
 	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
 	padding: 10px;
 	text-align: center;
+	transition: transform 0.3s ease, box-shadow 0.2s ease;
 }
 .recent-card img {
 	width: 100%;
@@ -39,5 +54,9 @@ body {
 }
 .recent-card p {
 	font-weight: 600;
+}
+.recent-card:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 

@@ -10,10 +10,18 @@ body {
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 	padding: 10px;
 	text-align: center;
-	transition: transform 0.2s;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .item-card:hover {
-	transform: translateY(-5px);
+	transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+.item-card-link {
+    text-decoration: none;
+    color: inherit; /* keep the card’s text color */
+}
+.item-card-link:hover {
+    color: inherit; /* no hover color change */
 }
 .item-card img {
 	width: 200px;
