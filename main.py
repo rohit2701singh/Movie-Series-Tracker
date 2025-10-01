@@ -95,7 +95,7 @@ def home():
         .limit(4)
     ).scalars().all()
 
-    
+
     return render_template(
         "home.html",
         movies_watched = len(movies_watched),
@@ -133,7 +133,7 @@ def search():
             for item in resp_movie.get("results", []):
                 item["media_type"] = "movie"
 
-                # 🔹 format date
+                # format date
                 date_str = item.get("release_date")
                 item["formatted_date"] = (
                     datetime.strptime(date_str, "%Y-%m-%d").strftime("%d-%m-%Y")
@@ -150,7 +150,7 @@ def search():
             for item in resp_tv.get("results", []):
                 item["media_type"] = "series"
 
-                # 🔹 format date
+                # format date
                 date_str = item.get("first_air_date")
                 item["formatted_date"] = (
                     datetime.strptime(date_str, "%Y-%m-%d").strftime("%d-%m-%Y")
@@ -159,8 +159,7 @@ def search():
 
                 results.append(item)
 
-
-    # fixed 3 pages max
+    # fixed 5 pages max
     total_pages = 5
 
     return render_template(
@@ -284,6 +283,9 @@ def dashboard(media_type):
 
 @app.route("/edit/<int:item_id>", methods=["GET", "POST"])
 def edit_item(item_id):
+
+    next_page = request.args.get('next')  # get original source
+
     # Fetch the item from DB
     item = db.session.execute(db.select(Wishlist).where(Wishlist.id == item_id)).scalar()
 
@@ -306,8 +308,8 @@ def edit_item(item_id):
         db.session.commit()
         flash(f"{item.title} has been updated successfully!", "success")
 
-        # Redirect back to edit page or dashboard
-        return redirect(url_for("edit_item", item_id=item.id))
+        # Redirect back to edit page or page from user came to edit page
+        return redirect(next_page or url_for("edit_item", item_id=item.id))
 
     # GET request: show edit page
     return render_template("edit.html", item=item)
