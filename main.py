@@ -223,6 +223,22 @@ def add_to_wishlist():
     return redirect(request.referrer)  # Go back to search page
 
 
+@app.route("/wishlist-overview")
+def wishlist_overview():
+    towatch_items = db.session.execute(
+        db.select(Wishlist).where(Wishlist.status == "towatch").order_by(Wishlist.date_added.desc())
+    ).scalars().all()
+
+    watched_items = db.session.execute(
+        db.select(Wishlist).where(Wishlist.status == "watched").order_by(Wishlist.date_added.desc())
+    ).scalars().all()
+
+    return render_template(
+        "wishlist_overview.html",
+        towatch_items=towatch_items,
+        watched_items=watched_items
+    )
+
 
 @app.route("/dashboard/<media_type>")
 def dashboard(media_type):

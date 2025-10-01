@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Wishlist Overview{% endblock %}
+
+{% block style %}
+    {{ super() }}
+    <link href="{{ url_for('static', filename='css/wishlist.css') }}" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Want to Watch Column -->
+        <div class="col-md-6">
+            <h4 class="mb-3">Want to Watch</h4>
+            {% for item in towatch_items %}
+                <div class="wishlist-card mb-3">
+                    <div class="d-flex">
+                        <img src="{{ item.poster_path or 'https://picsum.photos/100/150' }}" class="img-fluid rounded me-3" style="width: 100px; height: 150px;">
+                        <div>
+                            <h5>{{ item.title }}</h5>
+                            <p>{{ item.media_type|capitalize }} | Rating: {{ item.rating }}</p>
+                            <a href="{{ url_for('edit_item', item_id=item.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Watched Column -->
+        <div class="col-md-6">
+            <h4 class="mb-3">Watched</h4>
+            {% for item in watched_items %}
+                <div class="wishlist-card mb-3">
+                    <div class="d-flex">
+                        <img src="{{ item.poster_path or 'https://picsum.photos/100/150' }}" class="img-fluid rounded me-3" style="width: 100px; height: 150px;">
+                        <div>
+                            <h5>{{ item.title }}</h5>
+                            <p>{{ item.media_type|capitalize }} | Rating: {{ item.rating }}</p>
+                            <a href="{{ url_for('edit_item', item_id=item.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

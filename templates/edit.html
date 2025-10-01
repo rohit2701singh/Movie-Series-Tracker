@@ -44,7 +44,7 @@
                 Delete
             </button>
             <!-- Cancel Button -->
-            <a href="{{ url_for('dashboard', media_type=item.media_type) }}" class="btn btn-secondary mt-3">
+            <a href="{{ request.referrer or url_for('dashboard', media_type=item.media_type) }}" class="btn btn-secondary mt-3">
                 Cancel
             </a>
 
