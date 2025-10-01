@@ -297,13 +297,19 @@ def edit_item(item_id):
     return render_template("edit.html", item=item)
 
 
-@app.route("/wishlist/delete/<int:item_id>")
+@app.route("/wishlist/delete/<int:item_id>", methods=["POST"])
 def delete_item(item_id):
     item = db.session.execute(db.select(Wishlist).where(Wishlist.id == item_id)).scalar()
+    
+    if not item:
+        flash("Item not found.", "danger")
+        return redirect(request.referrer or url_for("dashboard", media_type="movie"))
+
     db.session.delete(item)
     db.session.commit()
-    flash(f'"{item.title}" has been deleted.', 'success')
-    return redirect(url_for('dashboard', media_type=item.media_type))
+    
+    flash(f'"{item.title}" has been deleted.', "success")
+    return redirect(url_for("dashboard", media_type=item.media_type))
 
 
 if __name__ == '__main__':
