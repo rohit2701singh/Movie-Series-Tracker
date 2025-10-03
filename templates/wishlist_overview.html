@@ -48,9 +48,11 @@
             {% for item in towatch_items %}
                 <div class="wishlist-card mb-3">
                     <div class="d-flex">
-                        <img src="{{ item.poster_path or 'https://picsum.photos/100/150' }}" 
-                             class="img-fluid rounded me-3" 
-                             style="width: 100px; height: 150px;">
+                        <a href="{{ url_for('edit_item', item_id=item.id, next=request.full_path) }}">
+                            <img src="{{ item.poster_path or 'https://picsum.photos/100/150' }}" 
+                                class="img-fluid rounded me-3" 
+                                style="width: 100px; height: 150px;">
+                        </a>
                         <div>
                             <h5>{{ item.title }}</h5>
                             <p>{{ item.media_type|capitalize }} | Rating: {{ item.rating }}</p>
@@ -100,9 +102,11 @@
             {% for item in watched_items %}
                 <div class="wishlist-card mb-3">
                     <div class="d-flex">
-                        <img src="{{ item.poster_path or 'https://picsum.photos/100/150' }}" 
-                             class="img-fluid rounded me-3" 
-                             style="width: 100px; height: 150px;">
+                        <a href="{{ url_for('edit_item', item_id=item.id, next=request.full_path) }}">
+                            <img src="{{ item.poster_path or 'https://picsum.photos/100/150' }}" 
+                                class="img-fluid rounded me-3" 
+                                style="width: 100px; height: 150px;">
+                        </a>
                         <div>
                             <h5>{{ item.title }}</h5>
                             <p>{{ item.media_type|capitalize }} | Rating: {{ item.rating }}</p>

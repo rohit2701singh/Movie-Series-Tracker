@@ -295,7 +295,7 @@ def edit_item(item_id):
         return redirect(next_page or url_for("edit_item", item_id=item.id))
 
     # GET request: show edit page
-    return render_template("edit.html", item=item)
+    return render_template("edit.html", item=item, next_page=next_page)
 
 
 @app.route("/wishlist-overview")
@@ -350,7 +350,7 @@ def wishlist_overview():
         media_type_towatch=media_type_towatch,
         sort_by_towatch=sort_by_towatch,
         search_towatch=search_towatch,
-        
+
         media_type_watched=media_type_watched,
         sort_by_watched=sort_by_watched,
         search_watched=search_watched,
@@ -359,6 +359,8 @@ def wishlist_overview():
 
 @app.route("/wishlist/delete/<int:item_id>", methods=["POST"])
 def delete_item(item_id):
+    next_page = request.args.get('next')  # get original source
+
     item = db.session.execute(db.select(Wishlist).where(Wishlist.id == item_id)).scalar()
     
     if not item:
@@ -369,7 +371,7 @@ def delete_item(item_id):
     db.session.commit()
     
     flash(f'"{item.title}" has been deleted.', "success")
-    return redirect(url_for("dashboard", media_type=item.media_type))
+    return redirect(next_page or url_for("dashboard", media_type=item.media_type))
 
 
 if __name__ == '__main__':
