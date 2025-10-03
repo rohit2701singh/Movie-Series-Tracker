@@ -183,6 +183,11 @@ def add_to_wishlist():
     title = request.form.get("title")
     release_date = request.form.get("release_date")
     poster_path = request.form.get("poster_path")
+    if poster_path and poster_path != "None":
+        poster_path_full = f"{TMDB_IMG_BASE_URL}{poster_path}"
+    else:
+        poster_path_full = None
+    
     overview = request.form.get("overview")
     rating = request.form.get("rating")
     vote_count = request.form.get("vote_count")
@@ -204,7 +209,7 @@ def add_to_wishlist():
         media_type=media_type,
         title=title,
         release_date=datetime.strptime(release_date, "%Y-%m-%d").strftime("%d-%m-%Y"),
-        poster_path=f"{TMDB_IMG_BASE_URL}{poster_path}",
+        poster_path=poster_path_full,
         overview=overview,
         rating=rating,
         vote_count=vote_count,

@@ -47,17 +47,23 @@
 
             {% for item in towatch_items %}
                 <div class="wishlist-card mb-3">
-                    <div class="d-flex">
-                        <a href="{{ url_for('edit_item', item_id=item.id, next=request.full_path) }}">
+                    <div class="d-flex align-items-start">
+                        <!-- Image fixed size, never shrinks -->
+                        <a href="{{ url_for('edit_item', item_id=item.id, next=request.full_path) }}" 
+                        class="me-3 flex-shrink-0">
                             <img src="{{ item.poster_path or 'https://picsum.photos/100/150' }}" 
-                                class="img-fluid rounded me-3" 
-                                style="width: 100px; height: 150px;">
+                                class="rounded"
+                                style="width: 100px; height: 150px; object-fit: cover;">
                         </a>
-                        <div>
-                            <h5>{{ item.title }}</h5>
-                            <p>{{ item.media_type|capitalize }} | Rating: {{ item.rating }}</p>
+
+                        <!-- Text block takes remaining space and wraps -->
+                        <div class="flex-grow-1" style="min-width: 0;">
+                            <h5 class="mb-1" style="word-wrap: break-word; white-space: normal;">
+                                {{ item.title }}
+                            </h5>
+                            <p class="mb-2">{{ item.media_type|capitalize }} | Rating: {{ item.rating }}</p>
                             <a href="{{ url_for('edit_item', item_id=item.id, next=request.full_path) }}" 
-                               class="btn btn-sm btn-outline-primary">Edit</a>
+                            class="btn btn-sm btn-outline-primary">Edit</a>
                         </div>
                     </div>
                 </div>
@@ -101,17 +107,20 @@
 
             {% for item in watched_items %}
                 <div class="wishlist-card mb-3">
-                    <div class="d-flex">
-                        <a href="{{ url_for('edit_item', item_id=item.id, next=request.full_path) }}">
+                    <div class="d-flex align-items-start">
+                        <a href="{{ url_for('edit_item', item_id=item.id, next=request.full_path) }}"
+                        class="me-3 flex-shrink-0">
                             <img src="{{ item.poster_path or 'https://picsum.photos/100/150' }}" 
-                                class="img-fluid rounded me-3" 
-                                style="width: 100px; height: 150px;">
+                                class="rounded" 
+                                style="width: 100px; height: 150px; object-fit: cover;">
                         </a>
-                        <div>
-                            <h5>{{ item.title }}</h5>
-                            <p>{{ item.media_type|capitalize }} | Rating: {{ item.rating }}</p>
+                        <div class="flex-grow-1" style="min-width: 0;">
+                            <h5 class="mb-1" style="word-wrap: break-word; white-space: normal;">
+                                {{ item.title }}
+                            </h5>
+                            <p class="mb-2">{{ item.media_type|capitalize }} | Rating: {{ item.rating }}</p>
                             <a href="{{ url_for('edit_item', item_id=item.id, next=request.full_path) }}" 
-                               class="btn btn-sm btn-outline-primary">Edit</a>
+                            class="btn btn-sm btn-outline-primary">Edit</a>
                         </div>
                     </div>
                 </div>
