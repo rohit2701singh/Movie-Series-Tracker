@@ -13,14 +13,49 @@
         <!-- Want to Watch Column -->
         <div class="col-md-6">
             <h4 class="mb-3">Want to Watch</h4>
+
+            <!-- Filter and Search (want to watch) -->
+            <form method="get" action="{{ url_for('wishlist_overview') }}" class="mb-3 d-flex flex-wrap gap-2">
+                <input type="hidden" name="list_type" value="towatch">
+
+                <!-- Preserve Watched filters -->
+                <input type="hidden" name="media_type_watched" value="{{ request.args.get('media_type_watched', '') }}">
+                <input type="hidden" name="sort_by_watched" value="{{ request.args.get('sort_by_watched', '') }}">
+                <input type="hidden" name="search_watched" value="{{ request.args.get('search_watched', '') }}">
+                
+                <!-- Actual to watch filters -->
+                <select name="media_type_towatch" class="form-select form-select-sm w-auto">
+                    <option value="">All</option>
+                    <option value="movie" {% if request.args.get('media_type_towatch') == 'movie' %}selected{% endif %}>Movies</option>
+                    <option value="series" {% if request.args.get('media_type_towatch') == 'series' %}selected{% endif %}>Series</option>
+                </select>
+
+                <select name="sort_by_towatch" class="form-select form-select-sm w-auto">
+                    <option value="">Sort by</option>
+                    <option value="title" {% if request.args.get('sort_by_towatch') == 'title' %}selected{% endif %}>Title</option>
+                    <option value="rating" {% if request.args.get('sort_by_towatch') == 'rating' %}selected{% endif %}>Rating</option>
+                    <option value="release_date" {% if request.args.get('sort_by_towatch') == 'release_date' %}selected{% endif %}>Release Date</option>
+                </select>
+
+                <input type="text" name="search_towatch" 
+                    value="{{ request.args.get('search_towatch', '') }}" 
+                    class="form-control form-control-sm w-auto" 
+                    placeholder="Search...">
+
+                <button type="submit" class="btn btn-sm btn-primary">Apply</button>
+            </form>
+
             {% for item in towatch_items %}
                 <div class="wishlist-card mb-3">
                     <div class="d-flex">
-                        <img src="{{ item.poster_path or 'https://picsum.photos/100/150' }}" class="img-fluid rounded me-3" style="width: 100px; height: 150px;">
+                        <img src="{{ item.poster_path or 'https://picsum.photos/100/150' }}" 
+                             class="img-fluid rounded me-3" 
+                             style="width: 100px; height: 150px;">
                         <div>
                             <h5>{{ item.title }}</h5>
                             <p>{{ item.media_type|capitalize }} | Rating: {{ item.rating }}</p>
-                            <a href="{{ url_for('edit_item', item_id=item.id, next=request.full_path) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                            <a href="{{ url_for('edit_item', item_id=item.id, next=request.full_path) }}" 
+                               class="btn btn-sm btn-outline-primary">Edit</a>
                         </div>
                     </div>
                 </div>
@@ -30,14 +65,49 @@
         <!-- Watched Column -->
         <div class="col-md-6">
             <h4 class="mb-3">Watched</h4>
+
+            <!-- Filter and Search (watched) -->
+            <form method="get" action="{{ url_for('wishlist_overview') }}" class="mb-3 d-flex flex-wrap gap-2">
+                <input type="hidden" name="list_type" value="watched">
+
+                <!-- Preserve Want to Watch filters -->
+                <input type="hidden" name="media_type_towatch" value="{{ request.args.get('media_type_towatch', '') }}">
+                <input type="hidden" name="sort_by_towatch" value="{{ request.args.get('sort_by_towatch', '') }}">
+                <input type="hidden" name="search_towatch" value="{{ request.args.get('search_towatch', '') }}">
+
+                <!-- Actual Watched filters -->
+                <select name="media_type_watched" class="form-select form-select-sm w-auto">
+                    <option value="">All</option>
+                    <option value="movie" {% if request.args.get('media_type_watched') == 'movie' %}selected{% endif %}>Movies</option>
+                    <option value="series" {% if request.args.get('media_type_watched') == 'series' %}selected{% endif %}>Series</option>
+                </select>
+
+                <select name="sort_by_watched" class="form-select form-select-sm w-auto">
+                    <option value="">Sort by</option>
+                    <option value="title" {% if request.args.get('sort_by_watched') == 'title' %}selected{% endif %}>Title</option>
+                    <option value="rating" {% if request.args.get('sort_by_watched') == 'rating' %}selected{% endif %}>Rating</option>
+                    <option value="release_date" {% if request.args.get('sort_by_watched') == 'release_date' %}selected{% endif %}>Release Date</option>
+                </select>
+
+                <input type="text" name="search_watched" 
+                    value="{{ request.args.get('search_watched', '') }}" 
+                    class="form-control form-control-sm w-auto" 
+                    placeholder="Search...">
+
+                <button type="submit" class="btn btn-sm btn-primary">Apply</button>
+            </form>
+
             {% for item in watched_items %}
                 <div class="wishlist-card mb-3">
                     <div class="d-flex">
-                        <img src="{{ item.poster_path or 'https://picsum.photos/100/150' }}" class="img-fluid rounded me-3" style="width: 100px; height: 150px;">
+                        <img src="{{ item.poster_path or 'https://picsum.photos/100/150' }}" 
+                             class="img-fluid rounded me-3" 
+                             style="width: 100px; height: 150px;">
                         <div>
                             <h5>{{ item.title }}</h5>
                             <p>{{ item.media_type|capitalize }} | Rating: {{ item.rating }}</p>
-                             <a href="{{ url_for('edit_item', item_id=item.id, next=request.full_path) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                            <a href="{{ url_for('edit_item', item_id=item.id, next=request.full_path) }}" 
+                               class="btn btn-sm btn-outline-primary">Edit</a>
                         </div>
                     </div>
                 </div>

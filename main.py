@@ -222,23 +222,6 @@ def add_to_wishlist():
     return redirect(request.referrer)  # Go back to search page
 
 
-@app.route("/wishlist-overview")
-def wishlist_overview():
-    towatch_items = db.session.execute(
-        db.select(Wishlist).where(Wishlist.status == "towatch").order_by(Wishlist.date_added.desc())
-    ).scalars().all()
-
-    watched_items = db.session.execute(
-        db.select(Wishlist).where(Wishlist.status == "watched").order_by(Wishlist.date_added.desc())
-    ).scalars().all()
-
-    return render_template(
-        "wishlist_overview.html",
-        towatch_items=towatch_items,
-        watched_items=watched_items
-    )
-
-
 @app.route("/dashboard/<media_type>")
 def dashboard(media_type):
     page = request.args.get("page", 1, type=int)  # current page
@@ -313,6 +296,65 @@ def edit_item(item_id):
 
     # GET request: show edit page
     return render_template("edit.html", item=item)
+
+
+@app.route("/wishlist-overview")
+def wishlist_overview():
+    # --- Params for "Want to Watch" ---
+    media_type_towatch = request.args.get("media_type_towatch")
+    sort_by_towatch = request.args.get("sort_by_towatch", "date_added")
+    search_towatch = request.args.get("search_towatch", "").strip()
+
+    # --- Params for "Watched" ---
+    media_type_watched = request.args.get("media_type_watched")
+    sort_by_watched = request.args.get("sort_by_watched", "date_added")
+    search_watched = request.args.get("search_watched", "").strip()
+
+    # --- Query for "Want to Watch" ---
+    query_towatch = db.select(Wishlist).where(Wishlist.status == "towatch")
+    if media_type_towatch:
+        query_towatch = query_towatch.where(Wishlist.media_type == media_type_towatch)
+    if search_towatch:
+        query_towatch = query_towatch.where(Wishlist.title.ilike(f"%{search_towatch}%"))
+
+    if sort_by_towatch == "rating":
+        query_towatch = query_towatch.order_by(Wishlist.rating.desc())
+    elif sort_by_towatch == "title":
+        query_towatch = query_towatch.order_by(Wishlist.title.asc())
+    else:
+        query_towatch = query_towatch.order_by(Wishlist.date_added.desc())
+
+    towatch_items = db.session.execute(query_towatch).scalars().all()
+
+    # --- Query for "Watched" ---
+    query_watched = db.select(Wishlist).where(Wishlist.status == "watched")
+    if media_type_watched:
+        query_watched = query_watched.where(Wishlist.media_type == media_type_watched)
+    if search_watched:
+        query_watched = query_watched.where(Wishlist.title.ilike(f"%{search_watched}%"))
+
+    if sort_by_watched == "rating":
+        query_watched = query_watched.order_by(Wishlist.rating.desc())
+    elif sort_by_watched == "title":
+        query_watched = query_watched.order_by(Wishlist.title.asc())
+    else:
+        query_watched = query_watched.order_by(Wishlist.date_added.desc())
+
+    watched_items = db.session.execute(query_watched).scalars().all()
+
+    return render_template(
+        "wishlist_overview.html",
+        towatch_items=towatch_items,
+        watched_items=watched_items,
+        # send back current filters to template
+        media_type_towatch=media_type_towatch,
+        sort_by_towatch=sort_by_towatch,
+        search_towatch=search_towatch,
+        
+        media_type_watched=media_type_watched,
+        sort_by_watched=sort_by_watched,
+        search_watched=search_watched,
+    )
 
 
 @app.route("/wishlist/delete/<int:item_id>", methods=["POST"])
