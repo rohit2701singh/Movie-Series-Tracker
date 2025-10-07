@@ -2,25 +2,25 @@ body {
 	background-color: #f8f9fa;
 }
 .stats-card {
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
+	background: #fff;
+	padding: 20px;
+	border-radius: 12px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+	transition: transform 0.2s, box-shadow 0.2s;
 	margin-bottom: 20px;
 	text-align: center;
-    cursor: pointer;
+	cursor: pointer;
 }
 .stats-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+	transform: translateY(-5px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 .card-link {
-    text-decoration: none;
-    color: inherit; /* keep the card’s text color */
+	text-decoration: none;
+	color: inherit; /* keep the card’s text color */
 }
 .card-link:hover {
-    color: inherit; /* no hover color change */
+	color: inherit; /* no hover color change */
 }
 
 .section-card {
@@ -40,23 +40,51 @@ body {
 .recent-activity {
 	margin-top: 30px;
 }
-.recent-card {
-	background-color: #ffffff;
+.recent-box {
+	position: relative;
 	border-radius: 10px;
-	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
 	padding: 10px;
-	text-align: center;
-	transition: transform 0.3s ease, box-shadow 0.2s ease;
-}
-.recent-card img {
 	width: 100%;
-	border-radius: 8px;
+	overflow: hidden;
+	transition: transform 0.3s ease; 
 }
-.recent-card p {
-	font-weight: 600;
+.recent-box img {
+	width: 100%;
+	height: auto;
+	display: block;
+	transition: transform 1s ease;
 }
-.recent-card:hover {
-    transform: translateY(-5px) scale(1.05);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+/* Overlay background */
+.recent-box .recent-card-info {
+	background-color: rgba(20, 20, 20, 0.7);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	opacity: 0;	/* invisible */
+	visibility: hidden;
+	transition: opacity 0.5s ease;
 }
-
+.recent-box .recent-card-info .caption {
+	text-align: center;
+	color: #fff;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+.recent-box .recent-card-info .caption h4 {
+	display: block;
+}
+.recent-box:hover img {
+	transform: scale(1.2);
+}
+.recent-box:hover .recent-card-info {
+	opacity: 1;
+	visibility: visible;
+}
+.recent-box.shadow {
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+	border-radius: 10px;
+}

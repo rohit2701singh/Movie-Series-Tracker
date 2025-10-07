@@ -118,7 +118,7 @@ def search():
 
     # fallback values in case of GET without form submit
     query = request.args.get("q", "")
-    status = request.args.get("status", "all")
+    status = request.args.get("status", "all")  # all, movie, series
 
     if form.validate_on_submit():
         query = form.q.data
