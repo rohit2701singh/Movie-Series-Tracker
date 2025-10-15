@@ -10,7 +10,7 @@
 
     <!-- Search Bar -->
 
-    <form method="POST" action="{{ url_for('search') }}" class="row search-bar align-items-center" novalidate>
+    <form method="POST" action="{{ url_for('main.search') }}" class="row search-bar align-items-center" novalidate>
         
         {{ form.hidden_tag() }} <!-- CSRF token -->
 
@@ -61,7 +61,7 @@
                     </p>
                     <!-- <a href="#" class="btn btn-sm btn-outline-primary">Add to Watchlist</a> -->
                     
-                    <form method="POST" action="{{ url_for('add_to_wishlist') }}">
+                    <form method="POST" action="{{ url_for('main.add_to_wishlist') }}">
 
                         <input type="hidden" name="tmdb_id" value="{{ item.id }}">
                         <input type="hidden" name="media_type" value="{{ item.media_type }}">
@@ -89,7 +89,7 @@
                 {% for p in range(1, total_pages + 1) %}
                     <li class="page-item {% if p == page %}active{% endif %}">
                         <a class="page-link"
-                            href="{{ url_for('search', q=query, status=status, page=p) }}">
+                            href="{{ url_for('main.search', q=query, status=status, page=p) }}">
                             {{ p }}
                         </a>
                     </li>

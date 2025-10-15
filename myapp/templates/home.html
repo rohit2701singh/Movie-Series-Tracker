@@ -10,7 +10,7 @@
     <!-- Stats Section -->
     <div class="row mb-4">
         <div class="col-md-3 col-sm-6">
-            <a href="{{ url_for('dashboard', media_type='movie', status='watched') }}" class="text-decoration-none card-link">
+            <a href="{{ url_for('main.dashboard', media_type='movie', status='watched') }}" class="text-decoration-none card-link">
                 <div class="stats-card">
                     <h5>🎬 Movies Watched</h5>
                     <h3>{{ movies_watched }}</h3>
@@ -19,7 +19,7 @@
         </div>
 
         <div class="col-md-3 col-sm-6">
-            <a href="{{ url_for('dashboard', media_type='movie', status='towatch') }}" class="text-decoration-none card-link">
+            <a href="{{ url_for('main.dashboard', media_type='movie', status='towatch') }}" class="text-decoration-none card-link">
                 <div class="stats-card">
                     <h5>🎬 Movies To Watch</h5>
                     <h3>{{ movies_towatch }}</h3>
@@ -28,7 +28,7 @@
         </div>
 
         <div class="col-md-3 col-sm-6">
-            <a href="{{ url_for('dashboard', media_type='series', status='watched') }}" class="text-decoration-none card-link">
+            <a href="{{ url_for('main.dashboard', media_type='series', status='watched') }}" class="text-decoration-none card-link">
                 <div class="stats-card">
                     <h5>📺 Series Watched</h5>
                     <h3>{{ series_watched }}</h3>
@@ -37,7 +37,7 @@
         </div>
 
         <div class="col-md-3 col-sm-6">
-            <a href="{{ url_for('dashboard', media_type='series', status='towatch') }}" class="text-decoration-none card-link">
+            <a href="{{ url_for('main.dashboard', media_type='series', status='towatch') }}" class="text-decoration-none card-link">
                 <div class="stats-card">
                     <h5>📺 Series To Watch</h5>
                     <h3>{{ series_towatch }}</h3>
@@ -53,14 +53,14 @@
             <div class="section-card">
                 <h2>🎬 Movies Dashboard</h2>
                 <p>View & manage all your movies</p>
-                <a href="{{ url_for('dashboard', media_type='movie') }}" class="btn btn-outline-primary">Go to Movies</a>
+                <a href="{{ url_for('main.dashboard', media_type='movie') }}" class="btn btn-outline-primary">Go to Movies</a>
             </div>
         </div>
         <div class="col-md-6">
             <div class="section-card">
                 <h2>📺 Web Series Dashboard</h2>
                 <p>View & manage all your web series</p>
-                <a href="{{ url_for('dashboard', media_type='series') }}" class="btn btn-outline-primary">Go to Series</a>
+                <a href="{{ url_for('main.dashboard', media_type='series') }}" class="btn btn-outline-primary">Go to Series</a>
             </div>
         </div>
     </div>
@@ -70,13 +70,13 @@
     <div class="recent-activity mt-5">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4>Recently Added Movies</h4>
-            <a href="{{ url_for('dashboard', media_type='movie') }}" class="btn btn-sm btn-outline-primary">Show More</a>
+            <a href="{{ url_for('main.dashboard', media_type='movie') }}" class="btn btn-sm btn-outline-primary">Show More</a>
         </div>
         <div class="row">
             {% for movie in recent_movies %}
                 <div class="col-6 col-md-3 mb-3">
                     <div class="recent-box shadow">
-                        <a href="{{ url_for('edit_item', item_id=movie.id, next=request.full_path) }}" class="text-decoration-none card-link">
+                        <a href="{{ url_for('main.edit_item', item_id=movie.id, next=request.full_path) }}" class="text-decoration-none card-link">
                             <img 
                                 src="{{ movie.poster_path or 'https://picsum.photos/200/300' }}" 
                                 alt="{{ movie.title }}" 
@@ -99,13 +99,13 @@
     <div class="recent-activity mt-5">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4>Recently Added Web Series</h4>
-            <a href="{{ url_for('dashboard', media_type='series') }}" class="btn btn-sm btn-outline-primary">Show More</a>
+            <a href="{{ url_for('main.dashboard', media_type='series') }}" class="btn btn-sm btn-outline-primary">Show More</a>
         </div>
         <div class="row">
             {% for show in recent_series %}
                 <div class="col-6 col-md-3 mb-3">
                     <div class="recent-box shadow">
-                        <a href="{{ url_for('edit_item', item_id=show.id, next=request.full_path) }}" class="text-decoration-none card-link">
+                        <a href="{{ url_for('main.edit_item', item_id=show.id, next=request.full_path) }}" class="text-decoration-none card-link">
                             <img 
                                 src="{{ show.poster_path or 'https://picsum.photos/200/300' }}" 
                                 alt="{{ show.title }}" 

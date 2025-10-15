@@ -15,7 +15,7 @@
             <h4 class="mb-3">Want to Watch</h4>
 
             <!-- Filter and Search (want to watch) -->
-            <form method="get" action="{{ url_for('wishlist_overview') }}" class="mb-3 d-flex flex-wrap gap-2">
+            <form method="get" action="{{ url_for('main.wishlist_overview') }}" class="mb-3 d-flex flex-wrap gap-2">
                 <input type="hidden" name="list_type" value="towatch">
 
                 <!-- Preserve Watched filters -->
@@ -49,7 +49,7 @@
                 <div class="wishlist-card mb-3">
                     <div class="d-flex align-items-start">
                         <!-- Image fixed size, never shrinks -->
-                        <a href="{{ url_for('edit_item', item_id=item.id, next=request.full_path) }}" 
+                        <a href="{{ url_for('main.edit_item', item_id=item.id, next=request.full_path) }}" 
                         class="me-3 flex-shrink-0">
                             <img src="{{ item.poster_path or 'https://picsum.photos/100/150' }}" 
                                 class="rounded"
@@ -62,7 +62,7 @@
                                 {{ item.title }}
                             </h5>
                             <p class="mb-2">{{ item.media_type|capitalize }} | Rating: {{ item.rating }}</p>
-                            <a href="{{ url_for('edit_item', item_id=item.id, next=request.full_path) }}" 
+                            <a href="{{ url_for('main.edit_item', item_id=item.id, next=request.full_path) }}" 
                             class="btn btn-sm btn-outline-primary">Edit</a>
                         </div>
                     </div>
@@ -75,7 +75,7 @@
             <h4 class="mb-3">Watched</h4>
 
             <!-- Filter and Search (watched) -->
-            <form method="get" action="{{ url_for('wishlist_overview') }}" class="mb-3 d-flex flex-wrap gap-2">
+            <form method="get" action="{{ url_for('main.wishlist_overview') }}" class="mb-3 d-flex flex-wrap gap-2">
                 <input type="hidden" name="list_type" value="watched">
 
                 <!-- Preserve Want to Watch filters -->
@@ -108,7 +108,7 @@
             {% for item in watched_items %}
                 <div class="wishlist-card mb-3">
                     <div class="d-flex align-items-start">
-                        <a href="{{ url_for('edit_item', item_id=item.id, next=request.full_path) }}"
+                        <a href="{{ url_for('main.edit_item', item_id=item.id, next=request.full_path) }}"
                         class="me-3 flex-shrink-0">
                             <img src="{{ item.poster_path or 'https://picsum.photos/100/150' }}" 
                                 class="rounded" 
@@ -119,7 +119,7 @@
                                 {{ item.title }}
                             </h5>
                             <p class="mb-2">{{ item.media_type|capitalize }} | Rating: {{ item.rating }}</p>
-                            <a href="{{ url_for('edit_item', item_id=item.id, next=request.full_path) }}" 
+                            <a href="{{ url_for('main.edit_item', item_id=item.id, next=request.full_path) }}" 
                             class="btn btn-sm btn-outline-primary">Edit</a>
                         </div>
                     </div>

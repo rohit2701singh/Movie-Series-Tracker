@@ -44,7 +44,7 @@
                 Delete
             </button>
             <!-- Cancel Button -->
-            <a href="{{ request.args.get('next') or url_for('dashboard', media_type=item.media_type) }}" class="btn btn-secondary mt-3">
+            <a href="{{ request.args.get('next') or url_for('main.dashboard', media_type=item.media_type) }}" class="btn btn-secondary mt-3">
                 Cancel
             </a>
 
@@ -57,7 +57,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
 
-        <form method="POST" action="{{ url_for('edit_item', item_id=item.id, next=request.full_path) }}">
+        <form method="POST" action="{{ url_for('main.edit_item', item_id=item.id, next=request.full_path) }}">
             <div class="modal-header">
                 <h5 class="modal-title" id="editModalLabel">Edit {{ item.title }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -103,7 +103,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <form method="POST" action="{{ url_for('delete_item', item_id=item.id, next=next_page) }}" class="d-inline">
+                <form method="POST" action="{{ url_for('main.delete_item', item_id=item.id, next=next_page) }}" class="d-inline">
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
             </div>

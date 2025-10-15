@@ -1,88 +1,21 @@
-from flask import Flask, render_template, redirect, request, flash, url_for
-from forms import SearchForm, LoginForm, RegisterForm
-from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin, current_user
-from flask_bcrypt import Bcrypt
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime, timezone
-from dotenv import load_dotenv
+from flask import Blueprint, render_template, redirect, request, url_for, flash, abort
+from myapp import db, bcrypt
+from myapp.models import User, Wishlist
+from myapp.forms import RegisterForm, LoginForm, SearchForm
+from flask_login import login_user, current_user, logout_user, login_required
+from myapp.config import TMDB_BASE_URL, TMDB_IMG_BASE_URL, headers
+from datetime import datetime
 import requests
-import os
-
-load_dotenv()
 
 
-TMDB_BASE_URL = "https://api.themoviedb.org/3"
-TMDB_IMG_BASE_URL = "https://image.tmdb.org/t/p/w200"
-
-headers = { 
-    "Content-Type": "application/json;charset=utf-8",
-    "Authorization": os.getenv('Authorization_Key')
-}
-
-app = Flask(__name__)
-
-bcrypt = Bcrypt(app)
-
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = "login"
-login_manager.login_message_category = "info"
-
-app.config["SECRET_KEY"] = os.getenv('FLASK_KEY')
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///wishlist.db"
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy()
-db.init_app(app)
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    return db.session.execute(db.select(User).where(User.id == user_id)).scalar()
-
-
-class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(200), nullable=False)
-
-    def __repr__(self): # When you print an object of class, __repr__ defines what gets displayed.
-        return f"<User Detail: User({self.username}, {self.email})>"
-
-
-class Wishlist(db.Model):
-    __tablename__ = "wishlist"
-
-    id = db.Column(db.Integer, primary_key=True)
-    tmdb_id = db.Column(db.Integer, nullable=False)
-    media_type = db.Column(db.String(10), nullable=False)  # movie or series
-    title = db.Column(db.String(255), nullable=False)
-    release_date = db.Column(db.String(20))  # store as string "dd-mm-yyyy" or original from TMDB
-    poster_path = db.Column(db.String(255))
-    overview = db.Column(db.Text)
-    rating = db.Column(db.Float)  # vote_average
-    vote_count = db.Column(db.Integer)
-    original_language = db.Column(db.String(10))
-    popularity = db.Column(db.Float)
-    status = db.Column(db.String(20), nullable=False, default="towatch")  # "watched" or "towatch"
-    date_added = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
-    user_rating = db.Column(db.Float, nullable=True)  # optional
-    notes = db.Column(db.Text, nullable=True)  # optional
-
-    def __repr__(self):
-        return f"<Wishlist {self.title} ({self.media_type})>"
-
-
-with app.app_context():
-    db.create_all()
+main = Blueprint("main", __name__)
 
 # ---------- User Registration and Login ---------------
 
-@app.route("/register", methods=["GET", "POST"])
+@main.route("/register", methods=["GET", "POST"])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('main.home'))
     
     form = RegisterForm()
     if form.validate_on_submit():
@@ -96,14 +29,14 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         flash(f"Account created successfully for {username}! You can now login", category="success")
-        return redirect(url_for('login'))
+        return redirect(url_for('main.login'))
     return render_template("register.html", form=form)
 
 
-@app.route("/login", methods=["GET", "POST"])
+@main.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('main.home'))
     
     form = LoginForm()
     if form.validate_on_submit():
@@ -119,25 +52,25 @@ def login():
             login_user(user)
             flash("Logged in successfully!", "success")
             next_page = request.args.get("next")
-            return redirect(next_page or url_for("home"))
+            return redirect(next_page or url_for("main.home"))
         else:
             flash("Invalid username/email or password.", "danger")
     
     return render_template("login.html", form=form)
 
 
-@app.route("/logout")
+@main.route("/logout")
 def logout():
     if not current_user.is_authenticated:
         flash("You are already logged out!", "warning")
-        return redirect(url_for("login"))
+        return redirect(url_for("main.login"))
 
     logout_user()
     flash("User logged out successfully", "info")
-    return redirect(url_for("home"))
+    return redirect(url_for("main.home"))
 
 
-@app.route("/")
+@main.route("/")
 def home():
 
     # movies_watched = db.session.execute(
@@ -191,7 +124,7 @@ def home():
 
 
 
-@app.route("/search", methods=["GET", "POST"])
+@main.route("/search", methods=["GET", "POST"])
 def search():
     form = SearchForm()
     results = []
@@ -257,7 +190,7 @@ def search():
 
 
 
-@app.route("/wishlist/add", methods=["POST"])
+@main.route("/wishlist/add", methods=["POST"])
 def add_to_wishlist():
 
     # Get data from form
@@ -310,13 +243,13 @@ def add_to_wishlist():
     return redirect(request.referrer)  # Go back to search page
 
 
-@app.route("/dashboard/<media_type>")
+@main.route("/dashboard/<media_type>")
 def dashboard(media_type):
     page = request.args.get("page", 1, type=int)  # current page
     per_page = 4  # items per page
 
     if media_type not in ["movie", "series"]:
-        return redirect(url_for("home"))
+        return redirect(url_for("main.home"))
 
     q = request.args.get("q", "")
     status_filter = request.args.get("status", "")
@@ -352,7 +285,7 @@ def dashboard(media_type):
     )
 
 
-@app.route("/edit/<int:item_id>", methods=["GET", "POST"])
+@main.route("/edit/<int:item_id>", methods=["GET", "POST"])
 def edit_item(item_id):
 
     next_page = request.args.get('next')  # get original source
@@ -362,7 +295,7 @@ def edit_item(item_id):
 
     if not item:
         flash("Item not found.", "danger")
-        return redirect(url_for("dashboard", media_type="movie"))  # fallback
+        return redirect(url_for("main.dashboard", media_type="movie"))  # fallback
 
     if request.method == "POST":
         # Get form data from modal
@@ -380,13 +313,13 @@ def edit_item(item_id):
         flash(f"{item.title} has been updated successfully!", "success")
 
         # Redirect back to edit page or page from user came to edit page
-        return redirect(next_page or url_for("edit_item", item_id=item.id))
+        return redirect(next_page or url_for("main.edit_item", item_id=item.id))
 
     # GET request: show edit page
     return render_template("edit.html", item=item, next_page=next_page)
 
 
-@app.route("/wishlist-overview")
+@main.route("/wishlist-overview")
 def wishlist_overview():
     # --- Params for "Want to Watch" ---
     media_type_towatch = request.args.get("media_type_towatch")
@@ -445,7 +378,7 @@ def wishlist_overview():
     )
 
 
-@app.route("/wishlist/delete/<int:item_id>", methods=["POST"])
+@main.route("/wishlist/delete/<int:item_id>", methods=["POST"])
 def delete_item(item_id):
     next_page = request.args.get('next')  # get original source
 
@@ -453,14 +386,10 @@ def delete_item(item_id):
     
     if not item:
         flash("Item not found.", "danger")
-        return redirect(request.referrer or url_for("dashboard", media_type="movie"))
+        return redirect(request.referrer or url_for("main.dashboard", media_type="movie"))
 
     db.session.delete(item)
     db.session.commit()
     
     flash(f'"{item.title}" has been deleted.', "danger")
-    return redirect(next_page or url_for("dashboard", media_type=item.media_type))
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    return redirect(next_page or url_for("main.dashboard", media_type=item.media_type))
