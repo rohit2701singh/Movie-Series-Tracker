@@ -13,6 +13,8 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(100), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
+    
+    # wishlist_items = db.relationship('Wishlist', back_populates='owner', lazy=True)
 
     def __repr__(self): # When you print an object of class, __repr__ defines what gets displayed.
         return f"<User Detail: User({self.username}, {self.email})>"
@@ -36,6 +38,9 @@ class Wishlist(db.Model):
     date_added = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     user_rating = db.Column(db.Float, nullable=True)  # optional
     notes = db.Column(db.Text, nullable=True)  # optional
+
+    # user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    # owner = db.relationship('User', back_populates='wishlist_items', lazy=True)
 
     def __repr__(self):
         return f"<Wishlist {self.title} ({self.media_type})>"

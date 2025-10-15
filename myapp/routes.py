@@ -378,7 +378,8 @@ def wishlist_overview():
     )
 
 
-@main.route("/wishlist/delete/<int:item_id>", methods=["POST"])
+@main.route("/wishlist/delete/<int:item_id>", methods=["POST", "GET"])
+@login_required
 def delete_item(item_id):
     next_page = request.args.get('next')  # get original source
 
