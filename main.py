@@ -1,10 +1,12 @@
 from flask import Flask, render_template, redirect, request, flash, url_for
-from forms import SearchForm
-import requests
+from forms import SearchForm, LoginForm, RegisterForm
+from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin, current_user
+from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timezone
-import os
 from dotenv import load_dotenv
+import requests
+import os
 
 load_dotenv()
 
@@ -19,12 +21,34 @@ headers = {
 
 app = Flask(__name__)
 
+bcrypt = Bcrypt(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"
+login_manager.login_message_category = "info"
+
 app.config["SECRET_KEY"] = os.getenv('FLASK_KEY')
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///wishlist.db"
 # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy()
 db.init_app(app)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return db.session.execute(db.select(User).where(User.id == user_id)).scalar()
+
+
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(200), nullable=False)
+
+    def __repr__(self): # When you print an object of class, __repr__ defines what gets displayed.
+        return f"<User Detail: User({self.username}, {self.email})>"
 
 
 class Wishlist(db.Model):
@@ -52,6 +76,65 @@ class Wishlist(db.Model):
 
 with app.app_context():
     db.create_all()
+
+# ---------- User Registration and Login ---------------
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    
+    form = RegisterForm()
+    if form.validate_on_submit():
+        hashed_pw = bcrypt.generate_password_hash(form.password.data).decode("utf-8")
+        username=form.username.data 
+        new_user = User(
+            username=username, 
+            email=form.email.data, 
+            password=hashed_pw
+            )
+        db.session.add(new_user)
+        db.session.commit()
+        flash(f"Account created successfully for {username}! You can now login", category="success")
+        return redirect(url_for('login'))
+    return render_template("register.html", form=form)
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    
+    form = LoginForm()
+    if form.validate_on_submit():
+        identifier = form.username_or_email.data.strip()
+        password = form.password.data
+
+        # Query by username **or** email
+        user = db.session.execute(
+            db.select(User).where((User.username == identifier) | (User.email == identifier))
+        ).scalar()
+
+        if user and bcrypt.check_password_hash(user.password, password):
+            login_user(user)
+            flash("Logged in successfully!", "success")
+            next_page = request.args.get("next")
+            return redirect(next_page or url_for("home"))
+        else:
+            flash("Invalid username/email or password.", "danger")
+    
+    return render_template("login.html", form=form)
+
+
+@app.route("/logout")
+def logout():
+    if not current_user.is_authenticated:
+        flash("You are already logged out!", "warning")
+        return redirect(url_for("login"))
+
+    logout_user()
+    flash("User logged out successfully", "info")
+    return redirect(url_for("home"))
 
 
 @app.route("/")
@@ -375,7 +458,7 @@ def delete_item(item_id):
     db.session.delete(item)
     db.session.commit()
     
-    flash(f'"{item.title}" has been deleted.', "success")
+    flash(f'"{item.title}" has been deleted.', "danger")
     return redirect(next_page or url_for("dashboard", media_type=item.media_type))
 
 

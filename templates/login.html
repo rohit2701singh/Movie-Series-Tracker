@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+
+{% block style %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+        <div class="card shadow p-4" style="max-width: 400px; width: 100%; border-radius: 12px;">
+            <h3 class="text-center mb-3">Welcome Back</h3>
+            <form method="POST" novalidate>
+                {{ form.hidden_tag() }}
+
+                <div class="mb-3">
+                    {{ form.username_or_email.label(class="form-label") }}
+                    {{ form.username_or_email(class="form-control", placeholder="Enter username or email") }}
+                    {% for error in form.username_or_email.errors %}
+                        <div class="text-danger small">*{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.password.label(class="form-label") }}
+                    {{ form.password(class="form-control", placeholder="Enter password") }}
+                    {% for error in form.password.errors %}
+                        <div class="text-danger small">*{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="d-grid">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+            <p class="text-center mt-3 mb-0">
+                Don’t have an account? <a href="{{ url_for('register') }}">Register</a>
+            </p>
+        </div>
+    </div>
+{% endblock %}
+
